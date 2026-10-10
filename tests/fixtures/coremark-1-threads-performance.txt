@@ -1,0 +1,17 @@
+2K performance run parameters for coremark.
+CoreMark Size    : 666
+Total ticks      : 15627
+Total time (secs): 15.627000
+Iterations/Sec   : 19197.542715
+Iterations       : 300000
+Compiler version : GCC15.2.1 20260123 (Red Hat 15.2.1-7)
+Compiler flags   : -O2 -DMULTITHREAD=1 -DUSE_PTHREAD -pthread  -lrt
+Memory location  : Please put data memory location here
+			(e.g. code in flash, data on heap etc)
+seedcrc          : 0xe9f5
+[0]crclist       : 0xe714
+[0]crcmatrix     : 0x1fd7
+[0]crcstate      : 0x8e3a
+[0]crcfinal      : 0xcc42
+Correct operation validated. See README.md for run and reporting rules.
+CoreMark 1.0 : 19197.542715 / GCC15.2.1 20260123 (Red Hat 15.2.1-7) -O2 -DMULTITHREAD=1 -DUSE_PTHREAD -pthread  -lrt / Heap

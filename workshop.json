@@ -1,0 +1,45 @@
+{
+  "workshop": {
+    "schema": {
+      "version": "2020.03.02"
+    }
+  },
+  "userenvs": [
+    {
+      "name": "alma9",
+      "requirements": [
+        "coremark_build_driver",
+        "coremark_upstream"
+      ]
+    }
+  ],
+  "requirements": [
+    {
+      "name": "coremark_build_driver",
+      "type": "files",
+      "files_info": {
+        "files": [
+          {
+            "src": "%bench-dir%/coremark-build.py",
+            "dst": "/tmp/coremark-build.py"
+          }
+        ]
+      }
+    },
+    {
+      "name": "coremark_upstream",
+      "type": "source",
+      "source_info": {
+        "url": "https://github.com/eembc/coremark/archive/1f483d5b8316753a742cbf5590caf5bd0a4e4777.tar.gz",
+        "filename": "coremark-1f483d5b8316753a742cbf5590caf5bd0a4e4777.tar.gz",
+        "commands": {
+          "unpack": "tar -xzf coremark-1f483d5b8316753a742cbf5590caf5bd0a4e4777.tar.gz",
+          "get_dir": "echo coremark-1f483d5b8316753a742cbf5590caf5bd0a4e4777",
+          "commands": [
+            "python3 /tmp/coremark-build.py"
+          ]
+        }
+      }
+    }
+  ]
+}

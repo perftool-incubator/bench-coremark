@@ -1,0 +1,25 @@
+#!/usr/bin/env python3
+# -*- mode: python; indent-tabs-mode: nil; python-indent-level: 4 -*-
+# vim: autoindent tabstop=4 shiftwidth=4 expandtab softtabstop=4 filetype=python
+
+"""Return the maximum adapter workload duration; Rickshaw adds its own padding."""
+
+import sys
+
+from coremark_common import parse_cli
+
+
+def main(argv):
+    args = parse_cli(argv)
+    # The client runs performance and validation sequentially, each bounded by deadline.
+    # Return that workload bound only; Rickshaw adds its established 180-second padding.
+    print(2 * args.deadline)
+    return 0
+
+
+if __name__ == "__main__":
+    try:
+        sys.exit(main(sys.argv[1:]))
+    except ValueError as exc:
+        print("CoreMark runtime error: %s" % exc, file=sys.stderr)
+        sys.exit(2)

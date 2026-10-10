@@ -1,0 +1,23 @@
+{
+  "rickshaw-benchmark": {
+    "schema": {
+      "version": "2020.05.18"
+    }
+  },
+  "benchmark": "coremark",
+  "controller": {
+    "post-script": "%bench-dir%coremark-post-process.py"
+  },
+  "client": {
+    "files-from-controller": [
+      { "src": "%bench-dir%/coremark-base", "dest": "/usr/bin/" },
+      { "src": "%bench-dir%/coremark_common.py", "dest": "/usr/bin/" },
+      { "src": "%bench-dir%/coremark-post-process.py", "dest": "/usr/bin/" },
+      { "src": "%bench-dir%/coremark-client.py", "dest": "/usr/bin/" },
+      { "src": "%bench-dir%/coremark-get-runtime", "dest": "/usr/bin/" },
+      { "src": "%bench-dir%/coremark-client", "dest": "/usr/bin/" }
+    ],
+    "runtime": "coremark-get-runtime",
+    "start": "coremark-client"
+  }
+}

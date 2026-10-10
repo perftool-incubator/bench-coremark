@@ -1,0 +1,54 @@
+{
+  "tags": {
+    "description": "coremark-remotehosts-run-file-example"
+  },
+  "endpoints": [
+    {
+      "type": "remotehosts",
+      "settings": {
+        "user": "REPLACE_WITH_ENGINE_USER",
+        "controller-ip-address": "192.0.2.1"
+      },
+      "remotes": [
+        {
+          "engines": [
+            { "role": "client", "ids": [1] }
+          ],
+          "config": {
+            "host": "coremark-client.example.invalid",
+            "settings": {
+              "userenv": "alma9",
+              "osruntime": "podman",
+              "cpu-partitioning": false
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "benchmarks": [
+    {
+      "name": "coremark",
+      "ids": "1",
+      "mv-params": {
+        "global-options": [
+          {
+            "name": "coremark-initial-variants",
+            "params": [
+              { "arg": "threads", "vals": ["1", "2"] },
+              { "arg": "iterations", "vals": ["0"] },
+              { "arg": "deadline", "vals": ["300"] }
+            ]
+          }
+        ],
+        "sets": [
+          { "include": "coremark-initial-variants" }
+        ]
+      }
+    }
+  ],
+  "run-params": {
+    "num-samples": 1,
+    "test-order": "s"
+  }
+}

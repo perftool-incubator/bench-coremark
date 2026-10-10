@@ -1,0 +1,23 @@
+{
+  "rickshaw-benchmark-metadata": {
+    "schema": {
+      "version": "2026.08.11"
+    }
+  },
+  "benchmark": "coremark",
+  "description": "Runs unmodified EEMBC CoreMark with prepared one- and two-context POSIX-thread variants; indexes validated native iterations per second from the standard performance seed mode.",
+  "cdm_indexed": true,
+  "cdm_sources": [
+    {
+      "source": "coremark",
+      "types": ["iterations-sec"]
+    }
+  ],
+  "output_files": [
+    "coremark-performance.txt",
+    "coremark-validation.txt",
+    "coremark-run-manifest.json",
+    "coremark-client-stderrout.txt",
+    "coremark-error.txt"
+  ]
+}
