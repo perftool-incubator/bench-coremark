@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Client-only Crucible integration for unmodified EEMBC CoreMark, initially scoped to x86_64 and the `alma9` Workshop userenv entry with CPU partitioning disabled. Partitioned support is deferred to a future enhancement and is not an initial readiness gate.
+Client-only Crucible integration for unmodified EEMBC CoreMark, validated on x86_64 across the ten userenvs listed in `README.md` using the shared Workshop `default` profile. CPU partitioning remains disabled; other architectures and partitioned runs are outside the validated scope.
 
 ## Source and contracts
 

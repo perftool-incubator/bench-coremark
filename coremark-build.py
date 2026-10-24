@@ -35,7 +35,7 @@ PINNED_INPUTS = {
 
 
 def run(command):
-    print("$ " + shlex.join(command), flush=True)
+    print("$ " + " ".join(shlex.quote(argument) for argument in command), flush=True)
     subprocess.run(command, check=True)
 
 

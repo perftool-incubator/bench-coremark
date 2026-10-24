@@ -1,6 +1,6 @@
 # CoreMark for Crucible
 
-This project integrates the unmodified EEMBC CoreMark benchmark into Crucible as a client-only workload. It starts with the pinned upstream source, x86_64, and the exact `alma9` Workshop userenv entry. This is the initial target, not evidence of support for other distributions or architectures.
+This project integrates the unmodified EEMBC CoreMark benchmark into Crucible as a client-only workload. The shared `default` Workshop profile has passed x86_64 smoke runs on `alma10`, `alma9`, `fedora43`, `fedora44`, `rhubi10`, `rhubi9`, `stream10`, `stream9`, `alma8`, and `rhubi8`. These results establish compatibility for those userenvs with CPU partitioning disabled; they do not establish support for other architectures or partitioned execution.
 
 ## Source and license
 
@@ -44,7 +44,7 @@ python3 -m json.tool benchmark-metadata.json >/dev/null
 bash -n coremark-client coremark-base
 ```
 
-These local checks are distinct from the Workshop and Crucible development smoke recorded in [VALIDATION.md](VALIDATION.md). Workshop built the pinned CoreMark requirements stage for `alma9`/x86_64; the corrected-tree run later reused that image and reported four native sample scores. Workshop reused a cached base layer. The corrected `sum` descriptor was reprocessed and its four default queries matched native results against stock CDM, so CoreMark does not depend on a CDM change. This does not establish a cold base-image build or support outside that target. Crucible-level abort handling, upstream integration, and the broader userenv/architecture matrix remain pending. Initial support uses `cpu-partitioning=false`; partitioned execution is deferred. `.github/workflows/crucible-ci.yaml.example` is an inactive publication template, not a workflow GitHub will run. It uses the standard `all` userenv filter as the intended published matrix; do not activate it until CoreMark is registered, an official Rickshaw scenario exists, and the recipe supports and passes the intended userenv/architecture matrix.
+These local checks are distinct from the Workshop and Crucible smoke runs recorded in [VALIDATION.md](VALIDATION.md). The 2026-10-23 one-sample matrix passed for all ten x86_64 userenvs above on the same remotehosts endpoint configuration used for the Stream and PHPBench smokes. Each run used one client, disabled tools and CPU partitioning, and exercised `threads=1,2`, `iterations=0`, and `deadline=300`. Both native seed modes passed for each variant, and Crucible indexed the performance metrics. These compatibility runs are not performance qualification. The earlier four-sample Alma 9 result and CDM comparison remain historical; the image builds reused layers where available and do not establish a cold base-image build. Crucible-level abort handling, upstream integration, aarch64, and partitioned execution remain untested. `.github/workflows/crucible-ci.yaml.example` is an inactive publication template, not a workflow GitHub will run. It uses the standard `all` userenv filter as the intended published matrix; do not activate it until CoreMark is registered and an official Rickshaw scenario exists.
 
 ## Project files
 
