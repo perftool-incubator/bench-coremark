@@ -6,7 +6,7 @@
   },
   "userenvs": [
     {
-      "name": "alma9",
+      "name": "default",
       "requirements": [
         "coremark_build_driver",
         "coremark_upstream"

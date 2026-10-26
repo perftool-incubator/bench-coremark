@@ -1,20 +1,20 @@
 # CoreMark dependency and measurement design
 
-This worksheet records the initial CoreMark build/runtime boundary before implementation. It follows the repository and framework sources inspected on 2026-10-09. Subsequent local Workshop and Crucible development evidence is recorded in [VALIDATION.md](VALIDATION.md); that evidence is limited to the stated target and setup.
+This worksheet records the initial CoreMark build/runtime boundary before implementation. It follows the repository and framework sources inspected on 2026-10-09. Later Workshop and Crucible evidence, including the 2026-10-23 x86_64 userenv matrix, is recorded in [VALIDATION.md](VALIDATION.md).
 
-## Initial scope and environment
+## Tested scope and environment
 
 - **Topology:** one client engine; no server role.
-- **Initial target:** x86_64 on the existing `alma9` userenv with `cpu-partitioning=false`. The userenv definition provides `gcc`, `make`, Python 3, `tar`, and normal build utilities. No aarch64 or other userenv support is claimed until it has build and native-run evidence.
+- **Tested target set:** x86_64 on `alma10`, `alma9`, `fedora43`, `fedora44`, `rhubi10`, `rhubi9`, `stream10`, `stream9`, `alma8`, and `rhubi8`, with `cpu-partitioning=false`. The 2026-10-23 smoke matrix in [VALIDATION.md](VALIDATION.md) records a successful build and native run for each userenv. No aarch64 or partitioned execution is claimed.
 - **Workload revision:** official `eembc/coremark` commit `1f483d5b8316753a742cbf5590caf5bd0a4e4777`; Workshop acquires the archive by full commit SHA. Source is built unmodified and verified against 11 commit-specific SHA-256 locks covering benchmark source/headers, Makefile, and POSIX port C/header/make/override inputs. At this exact revision, upstream `make check` rejects the unchanged `coremark.h` because the bundled MD5 is stale; see README.
 - **Port/compiler:** upstream POSIX port, GCC, `-O2`, POSIX threads. The build must record the actual compiler version, flags, architecture, source revision, thread variant, and installed executable digest.
 - **Prepared variants:** one and two POSIX contexts, compiled separately through Workshop using upstream `MULTITHREAD`/`USE_PTHREAD` settings. Runtime thread selection only selects one of these installed binaries. There is no runtime compile step and no arbitrary thread-count build.
 
 ## Dependency ownership and Workshop plan
 
-The selected `alma9` userenv already supplies the compiler, `make`, Python 3, and archive tools. The benchmark adds only the pinned EEMBC source and builds two executables. A Workshop `files` requirement supplies a small build driver; a pinned `source` requirement unpacks the immutable GitHub archive, verifies the pinned source hashes, then builds and installs the variants and per-variant provenance under `/usr/local/libexec/coremark/`.
+The tested userenvs supply the compiler, `make`, Python 3, and archive tools. The benchmark adds only the pinned EEMBC source and builds two executables. A Workshop `files` requirement supplies a small build driver; a pinned `source` requirement unpacks the immutable GitHub archive, verifies the pinned source hashes, then builds and installs the variants and per-variant provenance under `/usr/local/libexec/coremark/`. EL8 runs use Python 3.6, so the driver formats displayed commands with `shlex.quote` rather than the newer `shlex.join`.
 
-The initial shared `workshop.json` selection is exact for `alma9`. Do not infer compatibility from Workshop's default fallback or from other userenvs. CI/userenv selection and native architecture execution still need validation before claiming broader support. No runtime package installation, source checkout, download, or compilation is allowed.
+The shared `workshop.json` selects `default`, validated against the ten userenvs above. Do not infer compatibility for other profiles or architectures. No runtime package installation, source checkout, download, or compilation is allowed.
 
 ## Runtime controls versus build inputs
 
@@ -39,9 +39,9 @@ CoreMark's own Makefile supports the native iteration argument (`0` means automa
 - Accept a reportable performance score only when process exit is zero, the expected performance seed CRC is present, CoreMark prints `Correct operation validated.`, no native error marker appears, all expected CRC fields exist for every requested context, actual native duration is at least ten seconds, and native `Iterations/Sec` is finite and positive. Apply the same success/CRC requirements to the separate validation-seed run, without indexing a score from it.
 - Any timeout, nonzero exit, unsupported variant, incomplete output, invalid CRC, missing metric, or invalid/sub-ten-second duration is a sample failure, surfaced through toolbox's Roadblock error message contract. Preserve partial raw logs for diagnosis and emit no valid score for that sample.
 
-## Build and environment acceptance still required
+## Build evidence and remaining environment boundaries
 
-The 2026-10-10 validation record documents a Workshop CoreMark requirements-stage build from pinned source and a later corrected-tree four-sample Crucible development run on the declared x86_64/`alma9` target, including both prepared variants and native scores. The corrected-tree run reused the built image; Workshop also reused a cached base layer. After the aggregation correction, the retained four samples were reprocessed on stock CDM and default API queries matched native results without overrides. Before broader readiness, validate a cold base-image build, Crucible abort cleanup, upstream integration, and the intended userenv/architecture matrix. Each additional claimed combination needs matching build and execution evidence. Initial support uses `cpu-partitioning=false`; partitioned support is deferred to a future enhancement.
+The 2026-10-10 record documents the initial x86_64/`alma9` build and four-sample development run. On 2026-10-23, the shared `default` profile passed one-sample Crucible smoke runs on all ten x86_64 userenvs listed above, including both prepared variants, native seed validation, and normal result indexing. See [VALIDATION.md](VALIDATION.md) for run IDs and measurements. These results establish compatibility smoke coverage, not performance qualification; the Alma 9 build reused cached base layers, so a cold base-image build is not established. Crucible abort cleanup, upstream integration, aarch64, and CPU-partitioned execution remain outside the validated scope.
 
 ## Source/code references inspected
 

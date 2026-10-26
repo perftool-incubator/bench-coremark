@@ -1,6 +1,6 @@
 # Local validation record
 
-Recorded 2026-10-10 from the local development environment. This record combines local source, adapter, and schema checks with an `alma9`/x86_64 Workshop build-stage check and a four-sample Crucible development run. It does not establish support beyond that target or complete the broader readiness matrix.
+Local source, adapter, and schema work was first recorded on 2026-10-10, along with the initial `alma9`/x86_64 Workshop build and four-sample Crucible run. The 2026-10-23 section below records the later ten-userenv x86_64 compatibility matrix using Workshop's shared `default` profile.
 
 ## Pinned upstream source/build
 
@@ -57,4 +57,23 @@ The first four-period API comparison was performed before the aggregation correc
 
 A focused stock-CDM aggregation fixture confirmed both scopes: simultaneous metric series with values 10 and 30 aggregate to 40, while separate sample periods with values 11 and 22 return 11 and 22 for their respective period queries.
 
-The development run confirms this staged CoreMark path on the tested `alma9` x86_64 setup with CPU partitioning disabled. The reused cached base means a cold base-image build was not exercised. Crucible-level abort handling, upstream integration, and other userenv or architecture combinations remain pending. CPU partitioning is deferred and outside initial support. The CI workflow file remains an inactive example until official benchmark registration, an official Rickshaw scenario, and the intended supported matrix are ready.
+The development run confirms this staged CoreMark path on the tested `alma9` x86_64 setup with CPU partitioning disabled. The reused cached base means a cold base-image build was not exercised. The 2026-10-23 section below records the expanded userenv set. Crucible-level abort handling, upstream integration, aarch64, and CPU-partitioned execution remain untested. The CI workflow file remains an inactive example until official benchmark registration and an official Rickshaw scenario are ready.
+
+## Broader x86_64 userenv compatibility smoke (2026-10-23)
+
+Before broadening the Workshop entry, the original explicit `alma9` profile passed locally (run `83dba9cf-7a97-41f9-a166-35c19bfa3574`). After switching the entry to `default`, the Alma 9 matrix run also passed (run `f352e07c-22f6-44e5-9f31-58be6243ff2b`).
+
+All matrix runs used the same single-client `remotehosts` endpoint configuration as the Stream and PHPBench smoke efforts: root client over Podman with CPU partitioning disabled. Each run used one sample, no tools, `threads=1,2`, `iterations=0`, `deadline=300`, and `test-order=sample`. All ten runs exited successfully, passed the CoreMark performance and validation seed modes for both prepared variants, and indexed two `iterations-sec` results. These one-sample measurements establish compatibility smoke coverage, not comparative performance.
+
+| Userenv | Crucible run ID | 1 thread (iterations/sec) | 2 threads (iterations/sec) |
+| --- | --- | ---: | ---: |
+| `alma10` | `45c81daf-c44c-412d-9771-3c62b894ab7f` | 23866.348449 | 45565.006075 |
+| `alma9` | `f352e07c-22f6-44e5-9f31-58be6243ff2b` | 25430.733041 | 49844.236760 |
+| `fedora43` | `c6ae00e3-c474-409c-8fb3-18e4ee2c4bb7` | 24293.465058 | 46707.146193 |
+| `fedora44` | `e2dbfe1c-f220-4875-8bbc-45a26d07ee52` | 23990.403838 | 46246.338832 |
+| `rhubi10` | `7367ff19-f37c-4284-ac88-ce41a3eb1506` | 23741.690408 | 45931.256220 |
+| `rhubi9` | `3cf59faf-80c1-40c4-b517-d54df55eedcf` | 25629.525213 | 49776.007964 |
+| `stream10` | `582a492f-624c-4d7a-a697-d601473d6a7b` | 23752.969121 | 44540.123228 |
+| `stream9` | `dc07383a-8fcb-487d-bae6-6900c254da3d` | 25498.820680 | 50169.321460 |
+| `alma8` | `3b808f40-a248-454e-b86b-14c35373f274` | 25298.842578 | 46772.684752 |
+| `rhubi8` | `0365556c-5a32-4fb1-a4c9-9cb6be2eca62` | 25247.743483 | 48975.593829 |
