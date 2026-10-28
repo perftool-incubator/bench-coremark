@@ -33,20 +33,22 @@ jobs:
         run: echo '${{ toJSON(steps.filter.outputs) }}' | jq .
 
   call-real-benchmark-crucible-ci:
-    needs: changes
+    needs: [ changes, call-unittest ]
     if: ${{ github.event.pull_request.head.repo.fork != true && (github.event_name == 'workflow_dispatch' || needs.changes.outputs.only-docs != 'true') }}
     uses: perftool-incubator/crucible-ci/.github/workflows/benchmark-crucible-ci.yaml@main
     with:
       ci_target: "coremark"
       ci_target_branch: "${{ github.ref }}"
       github_workspace: "$GITHUB_WORKSPACE"
-      # Publication template only: keep this file inactive until the benchmark
-      # is registered, has a Rickshaw scenario, and its intended userenv and
-      # architecture matrix is supported and tested.
       userenv_filter: "all"
     secrets:
       ci_registry_auth: ${{ secrets.CRUCIBLE_CI_ENGINES_REGISTRY_AUTH }}
       quay_oauth_token: ${{ secrets.CRUCIBLE_QUAYIO_OAUTH_TOKEN }}
+
+  call-unittest:
+    needs: changes
+    if: ${{ github.event.pull_request.head.repo.fork != true && (github.event_name == 'workflow_dispatch' || needs.changes.outputs.only-docs != 'true') }}
+    uses: ./.github/workflows/unittest.yaml
 
   call-faux-benchmark-crucible-ci:
     needs: changes
@@ -54,7 +56,7 @@ jobs:
     uses: perftool-incubator/crucible-ci/.github/workflows/faux-benchmark-crucible-ci.yaml@main
 
   crucible-ci-complete:
-    needs: [call-real-benchmark-crucible-ci, call-faux-benchmark-crucible-ci]
+    needs: [ changes, call-unittest, call-real-benchmark-crucible-ci, call-faux-benchmark-crucible-ci ]
     if: always()
     runs-on: ubuntu-latest
     steps:
