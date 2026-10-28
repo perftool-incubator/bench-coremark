@@ -19,3 +19,15 @@ Client-only Crucible integration for unmodified EEMBC CoreMark, validated on x86
 ## Validation
 
 Run `python3 -m unittest discover -s tests -v` and non-live syntax/schema checks described in `README.md`. Do not imply those local checks replace a Workshop image build or Crucible engine run.
+
+## CI gate
+
+The `.github/workflows/crucible-ci.yaml` workflow runs unit tests before the
+registered `coremark` benchmark CI on non-fork code changes and manual
+dispatches; docs-only pull requests use faux CI. Keep the callable unit test
+command in `.github/workflows/unittest.yaml` aligned with
+`python3 -m unittest discover -s tests -v`. The workflow uses the standard
+`all` userenv filter for CoreMark's recorded x86_64 compatibility coverage.
+The stable completion check is `crucible-ci-complete`; the ruleset backup
+records it as required, and the live default-branch ruleset should require it
+after its first successful pull request run.

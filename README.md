@@ -44,7 +44,18 @@ python3 -m json.tool benchmark-metadata.json >/dev/null
 bash -n coremark-client coremark-base
 ```
 
-These local checks are distinct from the Workshop and Crucible smoke runs recorded in [VALIDATION.md](VALIDATION.md). The 2026-10-23 one-sample matrix passed for all ten x86_64 userenvs above on the same remotehosts endpoint configuration used for the Stream and PHPBench smokes. Each run used one client, disabled tools and CPU partitioning, and exercised `threads=1,2`, `iterations=0`, and `deadline=300`. Both native seed modes passed for each variant, and Crucible indexed the performance metrics. These compatibility runs are not performance qualification. The earlier four-sample Alma 9 result and CDM comparison remain historical; the image builds reused layers where available and do not establish a cold base-image build. Crucible-level abort handling, upstream integration, aarch64, and partitioned execution remain untested. `.github/workflows/crucible-ci.yaml.example` is an inactive publication template, not a workflow GitHub will run. It uses the standard `all` userenv filter as the intended published matrix; do not activate it until CoreMark is registered and an official Rickshaw scenario exists.
+These local checks are distinct from the Workshop and Crucible smoke runs recorded in [VALIDATION.md](VALIDATION.md). The 2026-10-23 one-sample matrix passed for all ten x86_64 userenvs above on the same remotehosts endpoint configuration used for the Stream and PHPBench smokes. Each run used one client, disabled tools and CPU partitioning, and exercised `threads=1,2`, `iterations=0`, and `deadline=300`. Both native seed modes passed for each variant, and Crucible indexed the performance metrics. These compatibility runs are not performance qualification. The earlier four-sample Alma 9 result and CDM comparison remain historical; the image builds reused layers where available and do not establish a cold base-image build. Crucible-level abort handling, upstream integration, aarch64, and partitioned execution remain untested.
+
+## CI
+
+The active `.github/workflows/crucible-ci.yaml` workflow runs unit tests before
+the registered `coremark` benchmark matrix for non-fork code changes and
+manual dispatches; docs-only pull requests use faux CI. Both paths feed the
+stable `crucible-ci-complete` status check. The workflow uses the standard
+`all` userenv filter for CoreMark's recorded x86_64 compatibility coverage.
+The default-branch ruleset backup records `crucible-ci-complete` as required;
+add that check to the live ruleset after the workflow reports it successfully
+on its first pull request.
 
 ## Project files
 
@@ -55,4 +66,5 @@ These local checks are distinct from the Workshop and Crucible smoke runs record
 - `coremark-build.py`: immutable-input check, prepared variants, and build provenance.
 - `coremark-client.py`, `coremark_common.py`, `coremark-client`, and `coremark-base`: bounded runtime, native output parser, inherited CPU affinity for the initial supported configuration, and toolbox lifecycle integration.
 - `coremark-post-process.py`: revalidates logs and emits the performance CDM sample.
-- `.github/workflows/crucible-ci.yaml.example`: inactive standard reusable CI template for later publication readiness.
+- `.github/workflows/crucible-ci.yaml`: active benchmark CI workflow with the unit-test and completion gates.
+- `.github/workflows/unittest.yaml`: callable unit-test workflow used by the benchmark CI gate.
